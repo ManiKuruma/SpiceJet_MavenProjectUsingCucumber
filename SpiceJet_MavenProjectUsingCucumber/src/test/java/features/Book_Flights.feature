@@ -13,6 +13,20 @@ Examples:
 |oneway||AMD||BKK||June 2020||17||4||2||1||AED|
 
 @tc_002
+Scenario: Deals on Flights
+Given user is on homepage
+When user clicks on Deals link and navigates to Deals page
+And user clicks on Flights link
+Then result page is displayed  
+
+@tc_003
+Scenario: Deals on Boarding Pass
+Given user is on the homepage
+When user clicks on Deals link and navigates to the Deals page
+And user clicks on Boarding Pass link
+Then result page is displayed to the user 
+
+@tc_004
 Scenario Outline: Booking round trip flight
 Given user verifies that he/she is on flight booking page 
 When user selects trip type as roundtrip "<trip type>"

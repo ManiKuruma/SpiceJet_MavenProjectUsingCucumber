@@ -15,15 +15,17 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import pageObjects.Book_Flights_Page;
+import pageObjects.Deals_Page;
 import utilities.ReadConfig;
 
 public class BookFlights_stepdef 
 {
 	WebDriver driver;
 	Book_Flights_Page flights;
+	Deals_Page deals;
 	ReadConfig readconfig=new ReadConfig();
 	public String baseURL=readconfig.getApplicationURL();
-	@Before
+	@Before(order=0)
 	public void setup() throws Exception
 	{
 		String browser=readconfig.getBrowserName();
@@ -41,18 +43,23 @@ public class BookFlights_stepdef
 			break;
 		}
 		driver.manage().window().maximize();
+	}
+	@Before(order=1)
+	public void before()
+	{
 		driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS);
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.get(baseURL);
 		System.out.println("webpage launched");
 	}
-	@After
+	
+	@After()
 	public void tearDown() throws Exception
 	{
 		Thread.sleep(5000);
 		driver.quit();
 	}
-	//book flights oneway
+	//BOOK FLIGHTS ONE WAY
 	@Given("^user is on flights booking page$")
 	public void user_is_on_flights_booking_page() throws Throwable 
 	{
@@ -107,7 +114,7 @@ public class BookFlights_stepdef
 		Thread.sleep(5000);
 		flights.captureScreen(driver, "OnewayFlight", "passed");
 	}
-
+// BOOK FLIGHTS ROUNDTRIP 
 	@Given("^user verifies that he/she is on flight booking page$")
 	public void user_verifies_that_he_she_is_on_flight_booking_page() throws Throwable 
 	{
@@ -169,6 +176,72 @@ public class BookFlights_stepdef
 		Thread.sleep(5000);
 		flights.captureScreen(driver, "RoundTripFlight", "passed");
 	}
+//DEALS ON FLIGHTS
+	@Given("^user is on homepage$")
+	public void user_is_on_homepage() throws Throwable 
+	{
+		Assert.assertEquals("SpiceJet - Flight Booking for Domestic and International, Cheap Air Tickets", driver.getTitle());
+	    System.out.println("Homepage title verified");
+	}
+
+	@When("^user clicks on Deals link and navigates to Deals page$")
+	public void user_clicks_on_Deals_link_and_navigates_to_Deals_page() throws Throwable
+	{
+	   deals=new Deals_Page(driver);
+	   deals.DEALS_link.click();
+	    System.out.println("clicked DEALS Link");
+
+	}
+
+	@When("^user clicks on Flights link$")
+	public void user_clicks_on_Flights_link() throws Throwable 
+	{
+	    deals.Flight_link.click();
+	    System.out.println("clicked on Flight Link");
+	    Thread.sleep(2000);
+	}
+
+	@Then("^result page is displayed$")
+	public void result_page_is_displayed() throws Throwable 
+	{
+		flights=new Book_Flights_Page(driver);
+	    flights.captureScreen(driver, "DealsOnFlights", "passed");
+	    System.out.println("captured flight deals search result");
+	}
+//DEALS ON BOARDING PASS
+	@Given("^user is on the homepage$")
+	public void user_is_on_the_homepage() throws Throwable 
+	{
+		Assert.assertEquals("SpiceJet - Flight Booking for Domestic and International, Cheap Air Tickets", driver.getTitle());
+	    System.out.println("Homepage title verified");
+	}
+
+	@When("^user clicks on Deals link and navigates to the Deals page$")
+	public void user_clicks_on_Deals_link_and_navigates_to_the_Deals_page() throws Throwable 
+	{
+	  deals=new Deals_Page(driver);
+	  deals.DEALS_link.click();
+	    System.out.println("clicked DEALS Link");
+
+	}
+
+	@When("^user clicks on Boarding Pass link$")
+	public void user_clicks_on_Boarding_Pass_link() throws Throwable 
+	{
+		deals.BoardingPass_link.click();
+	    System.out.println("clicked on Boarding Pass Link");
+	    Thread.sleep(2000);
+	}
+
+	@Then("^result page is displayed to the user$")
+	public void result_page_is_displayed_to_the_user() throws Throwable
+	{
+		flights=new Book_Flights_Page(driver);
+		 flights.captureScreen(driver, "DealsOnBoardingPass", "passed");
+		    System.out.println("captured Boarding pass deals search result");
+
+	}
+
 
 
 }
